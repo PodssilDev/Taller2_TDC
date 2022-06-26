@@ -7,6 +7,7 @@
 # IMPORTACION DE FUNCIONES
 # ----------------------------------------------------------------------------
 
+from cProfile import label
 import skfuzzy as fuzz # Importamos Scikit-Fuzzy como fuzz
 import numpy as np # Se importa numpy como np
 import matplotlib.pyplot as plt # Se importa Pyplot de Matplotlib como plt
@@ -363,155 +364,171 @@ escala_integrantes0 = np.zeros_like(escala_integrantes)
 escala_intensidad_sonido0 = np.zeros_like(escala_intensidad_sonido)
 escala_ritmos0 = np.zeros_like(escala_ritmos)
 
-fig, (regla1_graficos, regla3_graficos, regla3_graficos, regla4_graficos, regla5_graficos, regla6_graficos, regla7_graficos, regla8_graficos, regla9_graficos, regla10_graficos, regla11_graficos, regla12_graficos, regla13_graficos, regla14_graficos, graficoFinal) = plt.subplots(15, 4)
-
 #Graficos para numero de integrantes
 #Integrantes Bajo
-integrantes_bajo_grafico = plt.fill_between(escala_integrantes, escala_integrantes0, integrantes_bajo, facecolor='b', alpha=0.8, label='Bajo')
-integrantes_bajo_grafico.plot([cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_baja], "k", linewidth=1.5)
-integrantes_bajo_grafico.plot([0, cantidad_integrantes], [cantidad_integrantes_baja, cantidad_integrantes_baja], "k", linewidth=1.5, linestyle="--")
+integrantes_bajo_grafico_fill_between = [escala_integrantes, escala_integrantes0, integrantes_bajo, 'b', 0.8, 'Bajo']
+integrantes_bajo_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_baja], "k", 1.5]
+integrantes_bajo_grafico_lineay = [[0, cantidad_integrantes], [cantidad_integrantes_baja, cantidad_integrantes_baja], "k", 0.8, "--"]
 
 #Integrantes Medio
-integrantes_medio_grafico = plt.fill_between(escala_integrantes, escala_integrantes0,integrantes_medio, facecolor='r', alpha=0.8, label='Medio')
-integrantes_medio_grafico.plot([cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_medio], "k", linewidth=1.5)
-integrantes_medio_grafico.plot([0, cantidad_integrantes], [cantidad_integrantes_medio, cantidad_integrantes_medio], "k", linewidth=1.5, linestyle="--")
+integrantes_medio_grafico_fill_between = [escala_integrantes, escala_integrantes0,integrantes_medio, 'r', 0.8, 'Medio']
+integrantes_medio_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_medio], "k", 1.5]
+integrantes_medio_grafico_lineay = [[0, cantidad_integrantes], [cantidad_integrantes_medio, cantidad_integrantes_medio], "k", 0.8, "--"]
 
 #Integrantes Alto
-integrantes_alto_grafico = plt.fill_between(escala_integrantes, escala_integrantes0, integrantes_alto, facecolor='g', alpha=0.8, label='Alto')
-integrantes_alto_grafico.plot([cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_alto], "k", linewidth=1.5)
-integrantes_alto_grafico.plot([0, cantidad_integrantes], [cantidad_integrantes_alto, cantidad_integrantes_alto], "k", linewidth=1.5, linestyle="--")
+integrantes_alto_grafico_fill_between = [escala_integrantes, escala_integrantes0, integrantes_alto, 'g', 0.8, 'Alto']
+integrantes_alto_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_alto], "k", 1.5]
+integrantes_alto_grafico_lineay = [[0, cantidad_integrantes], [cantidad_integrantes_alto, cantidad_integrantes_alto], "k", 0.8, "--"]
 
 #Grafico para Intensidad del sonido
 #Intensidad del sonido baja
-intensidad_sonido_baja_grafico = plt.fill_between(escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_baja, facecolor='b', alpha=0.8, label='Baja')
-intensidad_sonido_baja_grafico.plot([intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_baja], "k", linewidth=1.5)
-intensidad_sonido_baja_grafico.plot([0, intensidad_sonido], [cantidad_intensidad_sonido_baja, cantidad_intensidad_sonido_baja], "k", linewidth=1.5, linestyle="--")
+intensidad_sonido_baja_grafico_fill_between = [escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_baja, 'b', 0.8, 'Baja']
+intensidad_sonido_baja_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_baja], "k", 1.5]
+intensidad_sonido_baja_grafico_lineay = [[0, intensidad_sonido], [cantidad_intensidad_sonido_baja, cantidad_intensidad_sonido_baja], "k", 0.8, "--"]
+
 
 #Intensidad del sonido media
-intensidad_sonido_media_grafico = plt.fill_between(escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_media, facecolor='r', alpha=0.8, label='Media')
-intensidad_sonido_media_grafico.plot([intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_media], "k", linewidth=1.5)
-intensidad_sonido_media_grafico.plot([0, intensidad_sonido], [cantidad_intensidad_sonido_media, cantidad_intensidad_sonido_media], "k", linewidth=1.5, linestyle="--")
+intensidad_sonido_media_grafico_fill_between = [escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_media, 'r', 0.8, 'Medio']
+intensidad_sonido_media_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_media], "k", 1.5]
+intensidad_sonido_media_grafico_lineay = [[0, intensidad_sonido], [cantidad_intensidad_sonido_media, cantidad_intensidad_sonido_media], "k", 0.8, "--"]
+
 
 #Intensidad del sonido alta
-intensidad_sonido_alta_grafico = plt.fill_between(escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_alta, facecolor='g', alpha=0.8, label='alta')
-intensidad_sonido_alta_grafico.plot([intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_alta], "k", linewidth=1.5)
-intensidad_sonido_alta_grafico.plot([0, intensidad_sonido], [cantidad_intensidad_sonido_alta, cantidad_intensidad_sonido_alta], "k", linewidth=1.5, linestyle="--")
+intensidad_sonido_alta_grafico_fill_between = [escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_alta, 'g', 0.8, 'alta']
+intensidad_sonido_alta_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_alta], "k", 1.5]
+intensidad_sonido_alta_grafico_lineay = [[0, intensidad_sonido], [cantidad_intensidad_sonido_alta, cantidad_intensidad_sonido_alta], "k", 0.8, "--"]
 
 #Graficos ritmo
 #Ritmo bajo
-ritmo_bajo_grafico = plt.fill_between(escala_ritmos, escala_ritmos0, ritmo_bajo, facecolor='b', alpha=0.8, label='Baja')
-ritmo_bajo_grafico.plot([ritmo, ritmo], [0, cantidad_ritmo_bajo], "k", linewidth=1.5)
-ritmo_bajo_grafico.plot([0, ritmo], [cantidad_ritmo_bajo, cantidad_ritmo_bajo], "k", linewidth=1.5, linestyle="--")
+ritmo_bajo_grafico_fill_between = [escala_ritmos, escala_ritmos0, ritmo_bajo, 'b', 0.8, 'Baja']
+ritmo_bajo_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_bajo], "k", 1.5]
+ritmo_bajo_grafico_lineay = [[0, ritmo], [cantidad_ritmo_bajo, cantidad_ritmo_bajo], "k", 0.8, "--"]
 
 #Ritmo medio
-ritmo_medio_grafico = plt.fill_between(escala_ritmos, escala_ritmos0, ritmo_medio, facecolor='r', alpha=0.8, label='Baja')
-ritmo_medio_grafico.plot([ritmo, ritmo], [0, cantidad_ritmo_medio], "k", linewidth=1.5)
-ritmo_medio_grafico.plot([0, ritmo], [cantidad_ritmo_medio, cantidad_ritmo_medio], "k", linewidth=1.5, linestyle="--")
+ritmo_medio_grafico_fill_between = [escala_ritmos, escala_ritmos0, ritmo_medio, 'r', 0.8, 'Baja']
+ritmo_medio_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_medio], "k", 1.5]
+ritmo_medio_grafico_lineay = [[0, ritmo], [cantidad_ritmo_medio, cantidad_ritmo_medio], "k", 0.8, "--"]
 
 #Ritmo alto
-ritmo_alto_grafico = plt.fill_between(escala_ritmos, escala_ritmos0, ritmo_alto, facecolor='g', alpha=0.8, label='Baja')
-ritmo_alto_grafico.plot([ritmo, ritmo], [0, cantidad_ritmo_alto], "k", linewidth=1.5)
-ritmo_alto_grafico.plot([0, ritmo], [cantidad_ritmo_alto, cantidad_ritmo_alto], "k", linewidth=1.5, linestyle="--")
+ritmo_alto_grafico_fill_between = [escala_ritmos, escala_ritmos0, ritmo_alto, 'g', 0.8, 'Baja']
+ritmo_alto_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_alto], "k", 1.5]
+ritmo_alto_grafico_lineay = [[0, ritmo], [cantidad_ritmo_alto, cantidad_ritmo_alto], "k", 0.8, "--"]
 
+
+
+fig, (regla1_graficos, regla2_graficos, regla3_graficos, regla4_graficos, regla5_graficos, regla6_graficos, regla7_graficos, regla8_graficos, regla9_graficos, regla10_graficos, regla11_graficos, regla12_graficos, regla13_graficos, regla14_graficos, graficoFinal) = plt.subplots(15, 4)
+
+def llenar_datos_grafico(grafico, datos_fill_between, datos_lineax, datos_lineay):
+    grafico.fill_between(datos_fill_between[0], datos_fill_between[1], datos_fill_between[2], facecolor=datos_fill_between[3], alpha=datos_fill_between[4], label=datos_fill_between[5])
+    grafico.plot(datos_lineax[0], datos_lineax[1], datos_lineax[2], linewidth=datos_lineax[3])
+    grafico.plot(datos_lineay[0], datos_lineay[1], datos_lineay[2], linewidth=datos_lineay[3], linestyle=datos_lineay[4])
+
+
+
+# ritmo_alto_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_alto], color="k", linewidth=1.5]
+# ritmo_alto_grafico_lineay = [[0, ritmo], [cantidad_ritmo_alto, cantidad_ritmo_alto], color="k", linewidth=1.5, linestyle="--"]
 #Regla 1
-regla1_graficos[0] = integrantes_bajo_grafico
-regla1_graficos[1] = intensidad_sonido_alta_grafico
-regla1_graficos[2] = ritmo_medio_grafico
-regla1_graficos[3].fill_between(escala_genero, escala_genero0, regla_rap1, facecolor="b", alpha=0.7)
+llenar_datos_grafico(regla1_graficos[0], integrantes_alto_grafico_fill_between, integrantes_alto_grafico_lineax, integrantes_alto_grafico_lineay)
+llenar_datos_grafico(regla1_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
+llenar_datos_grafico(regla1_graficos[2], ritmo_medio_grafico_fill_between, ritmo_medio_grafico_lineax, ritmo_medio_grafico_lineay)
+regla1_graficos[3].fill_between(escala_genero, regla_rap1, facecolor="b", alpha=0.7)
 regla1_graficos[3].plot(escala_genero, genero_rap, "b", linewidth=0.6, linestyle="--")
 
 #Regla 2
-regla3_graficos[0] = integrantes_medio_grafico
-regla3_graficos[1] = intensidad_sonido_alta_grafico
-regla3_graficos[2] = ritmo_bajo_grafico
-regla3_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock1, facecolor="b", alpha=0.7)
-regla3_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
+llenar_datos_grafico(regla2_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
+llenar_datos_grafico(regla2_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
+llenar_datos_grafico(regla2_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
+regla2_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock1, facecolor="b", alpha=0.7)
+regla2_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
 
 #Regla 3
-regla3_graficos[0] = integrantes_medio_grafico
-regla3_graficos[1] = intensidad_sonido_baja_grafico
-regla3_graficos[2] = ritmo_medio_grafico
+llenar_datos_grafico(regla3_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
+llenar_datos_grafico(regla3_graficos[1], intensidad_sonido_baja_grafico_fill_between, intensidad_sonido_baja_grafico_lineax, intensidad_sonido_baja_grafico_lineay)
+llenar_datos_grafico(regla3_graficos[2], ritmo_medio_grafico_fill_between, ritmo_medio_grafico_lineax, ritmo_medio_grafico_lineay)
 regla3_graficos[3].fill_between(escala_genero, escala_genero0, regla_blues1, facecolor="b", alpha=0.7)
 regla3_graficos[3].plot(escala_genero, genero_blues, "b", linewidth=0.6, linestyle="--")
 
 #Regla 4
-regla4_graficos[0] = integrantes_alto_grafico
-regla4_graficos[1] = intensidad_sonido_baja_grafico
-regla4_graficos[2] = ritmo_alto_grafico
+llenar_datos_grafico(regla4_graficos[0], integrantes_alto_grafico_fill_between, integrantes_alto_grafico_lineax, integrantes_alto_grafico_lineay)
+llenar_datos_grafico(regla4_graficos[1], intensidad_sonido_baja_grafico_fill_between, intensidad_sonido_baja_grafico_lineax, intensidad_sonido_baja_grafico_lineay)
+llenar_datos_grafico(regla4_graficos[2], ritmo_alto_grafico_fill_between, ritmo_alto_grafico_lineax, ritmo_alto_grafico_lineay)
 regla4_graficos[3].fill_between(escala_genero, escala_genero0, regla_pop1, facecolor="b", alpha=0.7)
 regla4_graficos[3].plot(escala_genero, genero_pop, "b", linewidth=0.6, linestyle="--")
 
 #Regla 5
-regla5_graficos[0] = integrantes_bajo_grafico
-regla5_graficos[1] = intensidad_sonido_media_grafico
-regla5_graficos[2] = ritmo_alto_grafico
+llenar_datos_grafico(regla5_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
+llenar_datos_grafico(regla5_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
+llenar_datos_grafico(regla5_graficos[2], ritmo_alto_grafico_fill_between, ritmo_alto_grafico_lineax, ritmo_alto_grafico_lineay)
 regla5_graficos[3].fill_between(escala_genero, escala_genero0, regla_pop2, facecolor="b", alpha=0.7)
 regla5_graficos[3].plot(escala_genero, genero_pop, "b", linewidth=0.6, linestyle="--")
 
 #Regla 6
-regla6_graficos[0] = integrantes_alto_grafico
-regla6_graficos[1] = intensidad_sonido_alta_grafico
-regla6_graficos[2] = ritmo_bajo_grafico
+llenar_datos_grafico(regla6_graficos[0], integrantes_alto_grafico_fill_between, integrantes_alto_grafico_lineax, integrantes_alto_grafico_lineay)
+llenar_datos_grafico(regla6_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
+llenar_datos_grafico(regla6_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
 regla6_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock2, facecolor="b", alpha=0.7)
 regla6_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
 
 #Regla 7
-regla7_graficos[0] = integrantes_bajo_grafico
-regla7_graficos[1] = intensidad_sonido_media_grafico
-regla7_graficos[2] = ritmo_bajo_grafico
+llenar_datos_grafico(regla7_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
+llenar_datos_grafico(regla7_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
+llenar_datos_grafico(regla7_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
 regla7_graficos[3].fill_between(escala_genero, escala_genero0, regla_rap2, facecolor="b", alpha=0.7)
 regla7_graficos[3].plot(escala_genero, genero_rap, "b", linewidth=0.6, linestyle="--")
 
 #Regla 8
-regla8_graficos[0] = integrantes_bajo_grafico
-regla8_graficos[1] = intensidad_sonido_media_grafico
-regla8_graficos[2] = ritmo_medio_grafico
+llenar_datos_grafico(regla8_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
+llenar_datos_grafico(regla8_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
+llenar_datos_grafico(regla8_graficos[2], ritmo_medio_grafico_fill_between, ritmo_medio_grafico_lineax, ritmo_medio_grafico_lineay)
 regla8_graficos[3].fill_between(escala_genero, escala_genero0, regla_blues2, facecolor="b", alpha=0.7)
 regla8_graficos[3].plot(escala_genero, genero_blues, "b", linewidth=0.6, linestyle="--")
 
 #Regla 9
-regla9_graficos[0] = integrantes_bajo_grafico
-regla9_graficos[1] = intensidad_sonido_media_grafico
-regla9_graficos[2] = ritmo_bajo_grafico
+llenar_datos_grafico(regla9_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
+llenar_datos_grafico(regla9_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
+llenar_datos_grafico(regla9_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
 regla9_graficos[3].fill_between(escala_genero, escala_genero0, regla_blues3, facecolor="b", alpha=0.7)
 regla9_graficos[3].plot(escala_genero, genero_blues, "b", linewidth=0.6, linestyle="--")
 
 #Regla 10
-regla10_graficos[0] = integrantes_medio_grafico
-regla10_graficos[1] = intensidad_sonido_alta_grafico
-regla10_graficos[2] = ritmo_alto_grafico
+llenar_datos_grafico(regla10_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
+llenar_datos_grafico(regla10_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
+llenar_datos_grafico(regla10_graficos[2], ritmo_alto_grafico_fill_between, ritmo_alto_grafico_lineax, ritmo_alto_grafico_lineay)
 regla10_graficos[3].fill_between(escala_genero, escala_genero0, regla_rap3, facecolor="b", alpha=0.7)
 regla10_graficos[3].plot(escala_genero, genero_rap, "b", linewidth=0.6, linestyle="--")
 
 #Regla 11
-regla11_graficos[0] = integrantes_medio_grafico
-regla11_graficos[1] = intensidad_sonido_alta_grafico
-regla11_graficos[2] = ritmo_medio_grafico
+llenar_datos_grafico(regla11_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
+llenar_datos_grafico(regla11_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
+llenar_datos_grafico(regla11_graficos[2], ritmo_medio_grafico_fill_between, ritmo_medio_grafico_lineax, ritmo_medio_grafico_lineay)
 regla11_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock3, facecolor="b", alpha=0.7)
 regla11_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
 
 #Regla 12
-regla12_graficos[0] = integrantes_alto_grafico
-regla12_graficos[1] = intensidad_sonido_baja_grafico
-regla12_graficos[2] = ritmo_bajo_grafico
+llenar_datos_grafico(regla12_graficos[0], integrantes_alto_grafico_fill_between, integrantes_alto_grafico_lineax, integrantes_alto_grafico_lineay)
+llenar_datos_grafico(regla12_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
+llenar_datos_grafico(regla12_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
 regla12_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock4, facecolor="b", alpha=0.7)
 regla12_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
 
 #Regla 13
-regla13_graficos[0] = integrantes_alto_grafico
-regla13_graficos[1] = intensidad_sonido_baja_grafico
-regla13_graficos[2] = ritmo_bajo_grafico
+llenar_datos_grafico(regla13_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
+llenar_datos_grafico(regla13_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
+llenar_datos_grafico(regla13_graficos[2], ritmo_alto_grafico_fill_between, ritmo_alto_grafico_lineax, ritmo_alto_grafico_lineay)
 regla13_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock4, facecolor="b", alpha=0.7)
 regla13_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
 
 #Regla 14
-regla14_graficos[0] = integrantes_medio_grafico
-regla14_graficos[1] = intensidad_sonido_media_grafico
-regla14_graficos[2] = ritmo_bajo_grafico
+llenar_datos_grafico(regla14_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
+llenar_datos_grafico(regla14_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
+llenar_datos_grafico(regla14_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
 regla14_graficos[3].fill_between(escala_genero, escala_genero0, regla_pop4, facecolor="b", alpha=0.7)
 regla14_graficos[3].plot(escala_genero, genero_pop, "b", linewidth=0.6, linestyle="--")
 
 #Grafico final - agregacion más resultado
 graficoFinal[3].fill_between(escala_genero, escala_genero0, agregacionFinal, facecolor="g", alpha=0.6)
-graficoFinal[3].plot([desfuzzificacion, desfuzzificacion], [0, resultado], "k", linewidth=1.5)
-graficoFinal[3].plot([0, desfuzzificacion], [resultado, resultado], "k", linewidth=1.5)
+graficoFinal[3].plot([desfuzzificacion, desfuzzificacion], [0, resultado], "k", linewidth=0.8)
+graficoFinal[3].plot([0], [1], linewidth=0)
+
+plt.tight_layout()
+plt.show()
