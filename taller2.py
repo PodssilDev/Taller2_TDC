@@ -118,13 +118,13 @@ def obtenerCaracteristica3(ritmo_bajo, ritmo_medio, ritmo_alto):
 '''
 Entrada: Cuatros arreglos 
 Salida: No tiene salida como tal
-Descripcion: Funcion que busca llena los datos de un grafico con la informacion correspondiente
+Descripcion: Funcion que busca llenar los datos de un grafico con la informacion correspondiente
 '''
 def llenar_datos_grafico(grafico, datos_fill_between, datos_lineax, datos_lineay):
     # Se llenan los datos con la informacion
-    grafico.fill_between(datos_fill_between[0], datos_fill_between[1], datos_fill_between[2], facecolor=datos_fill_between[3], alpha=datos_fill_between[4], label=datos_fill_between[5])
-    grafico.plot(datos_lineax[0], datos_lineax[1], datos_lineax[2], linewidth=datos_lineax[3])
-    grafico.plot(datos_lineay[0], datos_lineay[1], datos_lineay[2], linewidth=datos_lineay[3], linestyle=datos_lineay[4])
+    grafico.fill_between(datos_fill_between[0], datos_fill_between[1], facecolor=datos_fill_between[2], alpha=0.8)
+    grafico.plot(datos_lineax[0], datos_lineax[1], "k", linewidth=1.5)
+    grafico.plot(datos_lineay[0], datos_lineay[1], "k", linewidth=1.2, linestyle="--")
 
 '''
 Entrada: No tiene entrada
@@ -207,32 +207,32 @@ def main_interfaz():
     # Verificaciones
     try: # La cantidad de integrantes debe ser un entero entre 1 y 10
         cantidad_integrantes = int(cantidad_integrantes)
-        if(cantidad_integrantes <= 0 or cantidad_integrantes > 10):
-            messagebox.showinfo("Error", "La cantidad de integrantes debe ser un número entero entre 1 y 10!")
+        if(cantidad_integrantes <= 0 or cantidad_integrantes >= 10):
+            messagebox.showinfo("Error", "La cantidad de integrantes debe ser un número entero entre 1 y 9!")
             return
     except ValueError:
         # Si no es un entero , o esta fuera del rango, se muestra un error
-        messagebox.showinfo("Error", "La cantidad de integrantes debe ser un número entero entre 1 y 10!")
+        messagebox.showinfo("Error", "La cantidad de integrantes debe ser un número entero entre 1 y 9!")
         return
     try:
         # La intensidad de sonido debe ser un entero o decimal entre 0 y 10
         intensidad_sonido = float(intensidad_sonido)
-        if (intensidad_sonido < 0 or intensidad_sonido > 10):
-            messagebox.showinfo("Error", "La intensidad de sonido debe ser un número entre 0 y 10!")
+        if (intensidad_sonido < 0 or intensidad_sonido >= 10):
+            messagebox.showinfo("Error", "La intensidad de sonido debe ser un número entre 0 y 9!")
             return
     except ValueError:
         # Si no es un entero o decimal, o esta fuera del rango, se muestra un error
-        messagebox.showinfo("Error", "La intensidad de sonido debe ser un número entero o decimal entre 0 y 10!")
+        messagebox.showinfo("Error", "La intensidad de sonido debe ser un número entero o decimal entre 0 y 9!")
         return
     try:
         # El ritmo debe ser un entero o decimal entre 0 y 10
         ritmo = float(ritmo)
-        if (ritmo < 0 or ritmo > 10):
-            messagebox.showinfo("Error", "El ritmo debe ser un número entre 0 y 10!")
+        if (ritmo < 0 or ritmo >= 10):
+            messagebox.showinfo("Error", "El ritmo debe ser un número entre 0 y 9!")
             return
     except ValueError:
         # Si no es un entero o decimal, o esta fuera del rango, se muestra un error
-        messagebox.showinfo("Error", "El ritmo debe ser un número entero o decimal entre 0 y 10!")
+        messagebox.showinfo("Error", "El ritmo debe ser un número entero o decimal entre 0 y 9!")
         return
     
     # Si todas las verificaciones pasaron, se procede a realizar el proceso de logica difusa
@@ -293,32 +293,35 @@ def main_interfaz():
     regla_7 = np.fmin(np.fmin(cantidad_integrantes_baja, cantidad_intensidad_sonido_media), cantidad_ritmo_bajo)
     
     # Regla 8 
-    # Si la cantidad de integrantes es baja, con intensidad de sonido media y ritmo medio, ENTONCES el genero es blues
-    regla_8 = np.fmin(np.fmin(cantidad_integrantes_baja, cantidad_intensidad_sonido_media), cantidad_ritmo_medio)
+    # Si la cantidad de integrantes es baja o,  intensidad de sonido media y ritmo medio, ENTONCES el genero es blues
+    regla_8 = np.fmax(cantidad_integrantes_baja, np.fmin(cantidad_intensidad_sonido_media, cantidad_ritmo_medio))
     
     # Regla 9
     # Si la cantidad de integrantes es baja, con intensidad de sonido media y ritmo bajo, ENTONCES el genero es blues
     regla_9 = np.fmin(np.fmin(cantidad_integrantes_baja, cantidad_intensidad_sonido_baja), cantidad_ritmo_bajo)
     
     # Regla 10
-    # Si la cantidad de integrantes es medio, con intensidad de sonido alto y ritmo alto, ENTONCES el genero es rap
+    # Si la cantidad de integrantes es medio, intensidad de sonido alto y ritmo alto, ENTONCES el genero es rap
     regla_10 = np.fmin(np.fmin(cantidad_integrantes_medio, cantidad_intensidad_sonido_alta), cantidad_ritmo_alto)
     
     # Regla 11
-    # Si la cantidad de integrantes es medio, con intensidad de sonido alta y ritmo medio, ENTONCES el genero es rock
-    regla_11 = np.fmin(np.fmin(cantidad_integrantes_alto, cantidad_intensidad_sonido_baja), cantidad_ritmo_bajo)
+    # Si la cantidad de integrantes es alto, con intensidad de sonido alta y ritmo medio, ENTONCES el genero es rock
+    regla_11 = np.fmin(np.fmin(cantidad_integrantes_alto, cantidad_intensidad_sonido_alta), cantidad_ritmo_medio)
     
     # Regla 12
     # Si la cantidad de integrantes es alta, con intensidad de sonido media y ritmo bajo, ENTONCES el genero es rock
     regla_12 = np.fmin(np.fmin(cantidad_integrantes_alto, cantidad_intensidad_sonido_media), cantidad_ritmo_bajo)
     
     # Regla 13
-    # Si la cantidad de integrantes es baja, con intensidad de sonido alta y ritmo alto, ENTONCES el genero es rap
+    # Si la cantidad de integrantes es baja, con intensidad de sonido alta y ritmo alto, ENTONCES el genero es pop
     regla_13 = np.fmin(np.fmin(cantidad_integrantes_baja, cantidad_intensidad_sonido_alta), cantidad_ritmo_alto)
     
     # Regla 14
     # Si la cantidad de integrantes es media, con intensidad de sonido media y ritmo bajo, ENTONCES el genero es pop
     regla_14 = np.fmin(np.fmin(cantidad_integrantes_medio, cantidad_intensidad_sonido_media), cantidad_ritmo_bajo)
+    # Regla 15
+    # Si la cantidad de integrantes es media o, la intesidad de sonido es baja y el ritmo es bajo, ENTONCES el genero es blues
+    regla_15 = np.fmax(cantidad_integrantes_medio, np.fmin(cantidad_intensidad_sonido_baja, cantidad_ritmo_bajo))
     
     # Activacion de cada regla
     # Reglas correspondientes al genero Rock
@@ -337,6 +340,7 @@ def main_interfaz():
     regla_blues1 = np.fmin(regla_3, genero_blues)
     regla_blues2 = np.fmin(regla_8, genero_blues)
     regla_blues3 = np.fmin(regla_9, genero_blues)
+    regla_blues4 = np.fmin(regla_15, genero_blues)
     
     # Reglas correspondientes al genero Rap
     regla_rap1 = np.fmin(regla_1, genero_rap)
@@ -356,7 +360,8 @@ def main_interfaz():
     agregacion10 = np.fmax(agregacion9, regla_rock3)
     agregacion11 = np.fmax(agregacion10, regla_rock4)
     agregacion12 = np.fmax(agregacion11 , regla_pop3)
-    agregacionFinal = np.fmax(agregacion12, regla_pop4)   
+    agregacion13= np.fmax(agregacion12, regla_pop4)
+    agregacionFinal = np.fmax(agregacion13, regla_blues4)   
 
     # Se obtiene el valor desfuzzificado, utilizando el metodo BOA
     desfuzzificacion = fuzz.defuzz(escala_genero, agregacionFinal, 'bisector')
@@ -396,171 +401,204 @@ def main_interfaz():
     
     # Si el usuario decide que quiere ver los graficos, se generan y se muestran
     if(eleccion == "Si"):
-        # Graficos
-        escala_genero0 = np.zeros_like(escala_genero)
-        escala_integrantes0 = np.zeros_like(escala_integrantes)
-        escala_intensidad_sonido0 = np.zeros_like(escala_intensidad_sonido)
-        escala_ritmos0 = np.zeros_like(escala_ritmos)
-        
+        # Graficos        
         # Graficos para numero de integrantes
         # Integrantes Bajo
-        integrantes_bajo_grafico_fill_between = [escala_integrantes, escala_integrantes0, integrantes_bajo, 'b', 0.8, 'Bajo']
-        integrantes_bajo_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_baja], "k", 1.5]
-        integrantes_bajo_grafico_lineay = [[0, cantidad_integrantes], [cantidad_integrantes_baja, cantidad_integrantes_baja], "k", 0.8, "--"]
+        integrantes_bajo_grafico_fill_between = [escala_integrantes, integrantes_bajo, 'teal', 'Bajo']
+        integrantes_bajo_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_baja]]
+        integrantes_bajo_grafico_lineay = [[0, 10], [cantidad_integrantes_baja, cantidad_integrantes_baja]]
         
         # Integrantes Medio
-        integrantes_medio_grafico_fill_between = [escala_integrantes, escala_integrantes0,integrantes_medio, 'r', 0.8, 'Medio']
-        integrantes_medio_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_medio], "k", 1.5]
-        integrantes_medio_grafico_lineay = [[0, cantidad_integrantes], [cantidad_integrantes_medio, cantidad_integrantes_medio], "k", 0.8, "--"]
+        integrantes_medio_grafico_fill_between = [escala_integrantes, integrantes_medio, 'orangered', 'Medio']
+        integrantes_medio_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_medio]]
+        integrantes_medio_grafico_lineay = [[0, 10], [cantidad_integrantes_medio, cantidad_integrantes_medio]]
         
         # Integrantes Alto
-        integrantes_alto_grafico_fill_between = [escala_integrantes, escala_integrantes0, integrantes_alto, 'g', 0.8, 'Alto']
-        integrantes_alto_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_alto], "k", 1.5]
-        integrantes_alto_grafico_lineay = [[0, cantidad_integrantes], [cantidad_integrantes_alto, cantidad_integrantes_alto], "k", 0.8, "--"]
+        integrantes_alto_grafico_fill_between = [escala_integrantes, integrantes_alto, 'mediumpurple', 'Alto']
+        integrantes_alto_grafico_lineax = [[cantidad_integrantes, cantidad_integrantes], [0, cantidad_integrantes_alto]]
+        integrantes_alto_grafico_lineay = [[0, 10], [cantidad_integrantes_alto, cantidad_integrantes_alto]]
         
         # Grafico para Intensidad del sonido
         # Intensidad del sonido baja
-        intensidad_sonido_baja_grafico_fill_between = [escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_baja, 'b', 0.8, 'Baja']
-        intensidad_sonido_baja_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_baja], "k", 1.5]
-        intensidad_sonido_baja_grafico_lineay = [[0, intensidad_sonido], [cantidad_intensidad_sonido_baja, cantidad_intensidad_sonido_baja], "k", 0.8, "--"]
+        intensidad_sonido_baja_grafico_fill_between = [escala_intensidad_sonido, intensidad_sonido_baja, 'teal', 'Baja']
+        intensidad_sonido_baja_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_baja]]
+        intensidad_sonido_baja_grafico_lineay = [[0, 10], [cantidad_intensidad_sonido_baja, cantidad_intensidad_sonido_baja]]
         
         # Intensidad del sonido media
-        intensidad_sonido_media_grafico_fill_between = [escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_media, 'r', 0.8, 'Medio']
-        intensidad_sonido_media_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_media], "k", 1.5]
-        intensidad_sonido_media_grafico_lineay = [[0, intensidad_sonido], [cantidad_intensidad_sonido_media, cantidad_intensidad_sonido_media], "k", 0.8, "--"]
+        intensidad_sonido_media_grafico_fill_between = [escala_intensidad_sonido, intensidad_sonido_media, 'orangered', 'Medio']
+        intensidad_sonido_media_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_media]]
+        intensidad_sonido_media_grafico_lineay = [[0, 10], [cantidad_intensidad_sonido_media, cantidad_intensidad_sonido_media]]
         
         # Intensidad del sonido alta
-        intensidad_sonido_alta_grafico_fill_between = [escala_intensidad_sonido, escala_intensidad_sonido0, intensidad_sonido_alta, 'g', 0.8, 'alta']
-        intensidad_sonido_alta_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_alta], "k", 1.5]
-        intensidad_sonido_alta_grafico_lineay = [[0, intensidad_sonido], [cantidad_intensidad_sonido_alta, cantidad_intensidad_sonido_alta], "k", 0.8, "--"]
+        intensidad_sonido_alta_grafico_fill_between = [escala_intensidad_sonido, intensidad_sonido_alta, 'mediumpurple', 'Alto']
+        intensidad_sonido_alta_grafico_lineax = [[intensidad_sonido, intensidad_sonido], [0, cantidad_intensidad_sonido_alta]]
+        intensidad_sonido_alta_grafico_lineay = [[0, 10], [cantidad_intensidad_sonido_alta, cantidad_intensidad_sonido_alta]]
         
         # Graficos ritmo
         # Ritmo bajo
-        ritmo_bajo_grafico_fill_between = [escala_ritmos, escala_ritmos0, ritmo_bajo, 'b', 0.8, 'Baja']
-        ritmo_bajo_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_bajo], "k", 1.5]
-        ritmo_bajo_grafico_lineay = [[0, ritmo], [cantidad_ritmo_bajo, cantidad_ritmo_bajo], "k", 0.8, "--"]
+        ritmo_bajo_grafico_fill_between = [escala_ritmos, ritmo_bajo, 'teal', 'Baja']
+        ritmo_bajo_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_bajo]]
+        ritmo_bajo_grafico_lineay = [[0, 10], [cantidad_ritmo_bajo, cantidad_ritmo_bajo]]
         
         # Ritmo medio
-        ritmo_medio_grafico_fill_between = [escala_ritmos, escala_ritmos0, ritmo_medio, 'r', 0.8, 'Baja']
-        ritmo_medio_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_medio], "k", 1.5]
-        ritmo_medio_grafico_lineay = [[0, ritmo], [cantidad_ritmo_medio, cantidad_ritmo_medio], "k", 0.8, "--"]
+        ritmo_medio_grafico_fill_between = [escala_ritmos, ritmo_medio, 'orangered', 'Medio']
+        ritmo_medio_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_medio]]
+        ritmo_medio_grafico_lineay = [[0, 10], [cantidad_ritmo_medio, cantidad_ritmo_medio]]
         
         # Ritmo alto
-        ritmo_alto_grafico_fill_between = [escala_ritmos, escala_ritmos0, ritmo_alto, 'g', 0.8, 'Baja']
-        ritmo_alto_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_alto], "k", 1.5]
-        ritmo_alto_grafico_lineay = [[0, ritmo], [cantidad_ritmo_alto, cantidad_ritmo_alto], "k", 0.8, "--"]
+        ritmo_alto_grafico_fill_between = [escala_ritmos, ritmo_alto, 'mediumpurple', 'Alto']
+        ritmo_alto_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_alto]]
+        ritmo_alto_grafico_lineay = [[0, 10], [cantidad_ritmo_alto, cantidad_ritmo_alto]]
         
         # De esta forma se puede graficar todo en una sola figura
-        fig, (regla1_graficos, regla2_graficos, regla3_graficos, regla4_graficos, regla5_graficos, regla6_graficos, regla7_graficos, regla8_graficos, regla9_graficos, regla10_graficos, regla11_graficos, regla12_graficos, regla13_graficos, regla14_graficos, graficoFinal) = plt.subplots(15, 4)
+        fig, (regla1_graficos, regla2_graficos, regla3_graficos, regla4_graficos, regla5_graficos, regla6_graficos, regla7_graficos, regla8_graficos, regla9_graficos, regla10_graficos, regla11_graficos, regla12_graficos, regla13_graficos, regla14_graficos, regla15_graficos, graficoFinal) = plt.subplots(16, 4, sharex=True, sharey=True)
+
+        #Configuracion de la ventana
+        fig.subplots_adjust(top=0.95, bottom=0.025)
+
+        #Colores genero Rock, Rap, Blues, Pop
+        #Rock
+        color_rock = "mediumblue"
+        color_rap = "forestgreen"
+        color_blues = "chocolate"
+        color_pop = "mediumvioletred"
         
-        # ritmo_alto_grafico_lineax = [[ritmo, ritmo], [0, cantidad_ritmo_alto], color="k", linewidth=1.5]
-        # ritmo_alto_grafico_lineay = [[0, ritmo], [cantidad_ritmo_alto, cantidad_ritmo_alto], color="k", linewidth=1.5, linestyle="--"]
+        #Titulos
+        regla1_graficos[0].set_title("Numero de Integrantes")
+        regla1_graficos[1].set_title("Intensidad del sonido")
+        regla1_graficos[2].set_title("Ritmo de la cancion")
+        regla1_graficos[3].set_title("Genero")
          
         # Regla 1
-        llenar_datos_grafico(regla1_graficos[0], integrantes_alto_grafico_fill_between, integrantes_alto_grafico_lineax, integrantes_alto_grafico_lineay)
+        llenar_datos_grafico(regla1_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
         llenar_datos_grafico(regla1_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
         llenar_datos_grafico(regla1_graficos[2], ritmo_medio_grafico_fill_between, ritmo_medio_grafico_lineax, ritmo_medio_grafico_lineay)
-        regla1_graficos[3].fill_between(escala_genero, regla_rap1, facecolor="b", alpha=0.7)
-        regla1_graficos[3].plot(escala_genero, genero_rap, "b", linewidth=0.6, linestyle="--")
+        regla1_graficos[3].fill_between(escala_genero, regla_rap1, facecolor=color_rap, alpha=0.7)
+        regla1_graficos[3].plot(escala_genero, genero_rap, color_rap, linewidth=1, linestyle="--")
         
         # Regla 2
         llenar_datos_grafico(regla2_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
         llenar_datos_grafico(regla2_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
         llenar_datos_grafico(regla2_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
-        regla2_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock1, facecolor="b", alpha=0.7)
-        regla2_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
+        regla2_graficos[3].fill_between(escala_genero, regla_rock1, facecolor=color_rock, alpha=0.7)
+        regla2_graficos[3].plot(escala_genero, genero_rock, color_rock, linewidth=1, linestyle="--")
         
         # Regla 3
         llenar_datos_grafico(regla3_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
         llenar_datos_grafico(regla3_graficos[1], intensidad_sonido_baja_grafico_fill_between, intensidad_sonido_baja_grafico_lineax, intensidad_sonido_baja_grafico_lineay)
         llenar_datos_grafico(regla3_graficos[2], ritmo_medio_grafico_fill_between, ritmo_medio_grafico_lineax, ritmo_medio_grafico_lineay)
-        regla3_graficos[3].fill_between(escala_genero, escala_genero0, regla_blues1, facecolor="b", alpha=0.7)
-        regla3_graficos[3].plot(escala_genero, genero_blues, "b", linewidth=0.6, linestyle="--")
+        regla3_graficos[3].fill_between(escala_genero, regla_blues1, facecolor=color_blues, alpha=0.7)
+        regla3_graficos[3].plot(escala_genero, genero_blues, color_blues, linewidth=1, linestyle="--")
         
         # Regla 4
         llenar_datos_grafico(regla4_graficos[0], integrantes_alto_grafico_fill_between, integrantes_alto_grafico_lineax, integrantes_alto_grafico_lineay)
         llenar_datos_grafico(regla4_graficos[1], intensidad_sonido_baja_grafico_fill_between, intensidad_sonido_baja_grafico_lineax, intensidad_sonido_baja_grafico_lineay)
         llenar_datos_grafico(regla4_graficos[2], ritmo_alto_grafico_fill_between, ritmo_alto_grafico_lineax, ritmo_alto_grafico_lineay)
-        regla4_graficos[3].fill_between(escala_genero, escala_genero0, regla_pop1, facecolor="b", alpha=0.7)
-        regla4_graficos[3].plot(escala_genero, genero_pop, "b", linewidth=0.6, linestyle="--")
+        regla4_graficos[3].fill_between(escala_genero, regla_pop1, facecolor=color_pop, alpha=0.7)
+        regla4_graficos[3].plot(escala_genero, genero_pop, color_pop, linewidth=1, linestyle="--")
         
         # Regla 5
         llenar_datos_grafico(regla5_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
         llenar_datos_grafico(regla5_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
         llenar_datos_grafico(regla5_graficos[2], ritmo_alto_grafico_fill_between, ritmo_alto_grafico_lineax, ritmo_alto_grafico_lineay)
-        regla5_graficos[3].fill_between(escala_genero, escala_genero0, regla_pop2, facecolor="b", alpha=0.7)
-        regla5_graficos[3].plot(escala_genero, genero_pop, "b", linewidth=0.6, linestyle="--")
+        regla5_graficos[3].fill_between(escala_genero, regla_pop2, facecolor=color_pop, alpha=0.7)
+        regla5_graficos[3].plot(escala_genero, genero_pop, color_pop, linewidth=1, linestyle="--")
         
         # Regla 6
         llenar_datos_grafico(regla6_graficos[0], integrantes_alto_grafico_fill_between, integrantes_alto_grafico_lineax, integrantes_alto_grafico_lineay)
         llenar_datos_grafico(regla6_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
         llenar_datos_grafico(regla6_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
-        regla6_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock2, facecolor="b", alpha=0.7)
-        regla6_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
+        regla6_graficos[3].fill_between(escala_genero, regla_rock2, facecolor=color_rock, alpha=0.7)
+        regla6_graficos[3].plot(escala_genero, genero_rock, color_rock, linewidth=1, linestyle="--")
         
         # Regla 7
         llenar_datos_grafico(regla7_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
         llenar_datos_grafico(regla7_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
         llenar_datos_grafico(regla7_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
-        regla7_graficos[3].fill_between(escala_genero, escala_genero0, regla_rap2, facecolor="b", alpha=0.7)
-        regla7_graficos[3].plot(escala_genero, genero_rap, "b", linewidth=0.6, linestyle="--")
+        regla7_graficos[3].fill_between(escala_genero, regla_rap2, facecolor=color_rap, alpha=0.7)
+        regla7_graficos[3].plot(escala_genero, genero_rap, color_rap, linewidth=1, linestyle="--")
         
         # Regla 8
         llenar_datos_grafico(regla8_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
         llenar_datos_grafico(regla8_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
         llenar_datos_grafico(regla8_graficos[2], ritmo_medio_grafico_fill_between, ritmo_medio_grafico_lineax, ritmo_medio_grafico_lineay)
-        regla8_graficos[3].fill_between(escala_genero, escala_genero0, regla_blues2, facecolor="b", alpha=0.7)
-        regla8_graficos[3].plot(escala_genero, genero_blues, "b", linewidth=0.6, linestyle="--")
+        regla8_graficos[3].fill_between(escala_genero, regla_blues2, facecolor=color_blues, alpha=0.7)
+        regla8_graficos[3].plot(escala_genero, genero_blues, color_blues, linewidth=1, linestyle="--")
         
         # Regla 9
         llenar_datos_grafico(regla9_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
         llenar_datos_grafico(regla9_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
         llenar_datos_grafico(regla9_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
-        regla9_graficos[3].fill_between(escala_genero, escala_genero0, regla_blues3, facecolor="b", alpha=0.7)
-        regla9_graficos[3].plot(escala_genero, genero_blues, "b", linewidth=0.6, linestyle="--")
+        regla9_graficos[3].fill_between(escala_genero, regla_blues3, facecolor=color_blues, alpha=0.7)
+        regla9_graficos[3].plot(escala_genero, genero_blues, color_blues, linewidth=1, linestyle="--")
         
         # Regla 10
         llenar_datos_grafico(regla10_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
         llenar_datos_grafico(regla10_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
         llenar_datos_grafico(regla10_graficos[2], ritmo_alto_grafico_fill_between, ritmo_alto_grafico_lineax, ritmo_alto_grafico_lineay)
-        regla10_graficos[3].fill_between(escala_genero, escala_genero0, regla_rap3, facecolor="b", alpha=0.7)
-        regla10_graficos[3].plot(escala_genero, genero_rap, "b", linewidth=0.6, linestyle="--")
+        regla10_graficos[3].fill_between(escala_genero, regla_rap3, facecolor=color_rap, alpha=0.7)
+        regla10_graficos[3].plot(escala_genero, genero_rap, color_rap, linewidth=1, linestyle="--")
         
         # Regla 11
         llenar_datos_grafico(regla11_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
         llenar_datos_grafico(regla11_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
         llenar_datos_grafico(regla11_graficos[2], ritmo_medio_grafico_fill_between, ritmo_medio_grafico_lineax, ritmo_medio_grafico_lineay)
-        regla11_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock3, facecolor="b", alpha=0.7)
-        regla11_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
+        regla11_graficos[3].fill_between(escala_genero, regla_rock3, facecolor="b", alpha=0.7)
+        regla11_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=1, linestyle="--")
         
         # Regla 12
         llenar_datos_grafico(regla12_graficos[0], integrantes_alto_grafico_fill_between, integrantes_alto_grafico_lineax, integrantes_alto_grafico_lineay)
         llenar_datos_grafico(regla12_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
         llenar_datos_grafico(regla12_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
-        regla12_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock4, facecolor="b", alpha=0.7)
-        regla12_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
+        regla12_graficos[3].fill_between(escala_genero, regla_rock4, facecolor=color_rock, alpha=0.7)
+        regla12_graficos[3].plot(escala_genero, genero_rock, color_rock, linewidth=1, linestyle="--")
         
         # Regla 13
         llenar_datos_grafico(regla13_graficos[0], integrantes_bajo_grafico_fill_between, integrantes_bajo_grafico_lineax, integrantes_bajo_grafico_lineay)
         llenar_datos_grafico(regla13_graficos[1], intensidad_sonido_alta_grafico_fill_between, intensidad_sonido_alta_grafico_lineax, intensidad_sonido_alta_grafico_lineay)
         llenar_datos_grafico(regla13_graficos[2], ritmo_alto_grafico_fill_between, ritmo_alto_grafico_lineax, ritmo_alto_grafico_lineay)
-        regla13_graficos[3].fill_between(escala_genero, escala_genero0, regla_rock4, facecolor="b", alpha=0.7)
-        regla13_graficos[3].plot(escala_genero, genero_rock, "b", linewidth=0.6, linestyle="--")
+        regla13_graficos[3].fill_between(escala_genero, regla_pop3, facecolor=color_pop, alpha=0.7)
+        regla13_graficos[3].plot(escala_genero, genero_pop, color_pop, linewidth=1, linestyle="--")
         
         # Regla 14
         llenar_datos_grafico(regla14_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
         llenar_datos_grafico(regla14_graficos[1], intensidad_sonido_media_grafico_fill_between, intensidad_sonido_media_grafico_lineax, intensidad_sonido_media_grafico_lineay)
         llenar_datos_grafico(regla14_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
-        regla14_graficos[3].fill_between(escala_genero, escala_genero0, regla_pop4, facecolor="b", alpha=0.7)
-        regla14_graficos[3].plot(escala_genero, genero_pop, "b", linewidth=0.6, linestyle="--")
+        regla14_graficos[3].fill_between(escala_genero, regla_pop4, facecolor=color_pop, alpha=0.7)
+        regla14_graficos[3].plot(escala_genero, genero_pop, color_pop, linewidth=1, linestyle="--")
+        # Regla 15
+        llenar_datos_grafico(regla15_graficos[0], integrantes_medio_grafico_fill_between, integrantes_medio_grafico_lineax, integrantes_medio_grafico_lineay)
+        llenar_datos_grafico(regla15_graficos[1], intensidad_sonido_baja_grafico_fill_between, intensidad_sonido_baja_grafico_lineax, intensidad_sonido_baja_grafico_lineay)
+        llenar_datos_grafico(regla15_graficos[2], ritmo_bajo_grafico_fill_between, ritmo_bajo_grafico_lineax, ritmo_bajo_grafico_lineay)
+        regla15_graficos[3].fill_between(escala_genero, regla_blues4, facecolor=color_blues, alpha=0.7)
+        regla15_graficos[3].plot(escala_genero, genero_blues, color_blues, linewidth=1, linestyle="--")
         
         # Grafico final - agregacion más resultado
-        graficoFinal[3].fill_between(escala_genero, escala_genero0, agregacionFinal, facecolor="g", alpha=0.6)
-        graficoFinal[3].plot([desfuzzificacion, desfuzzificacion], [0, resultado], "k", linewidth=0.8)
+        #Para identificar los graficos (legends)
+        graficoFinal[0].fill_between([0], [0], facecolor="teal", label="Bajo", alpha=0.8)
+        graficoFinal[1].fill_between([0], [0], facecolor='orangered', label="Medio", alpha=0.8)
+        graficoFinal[2].fill_between([0], [0], facecolor="mediumpurple", label="Alto", alpha=0.8)
+
+        graficoFinal[2].plot(0, 0, color=color_rock, linestyle="--", label="Rock")
+        graficoFinal[2].plot(0, 1, color=color_rap, linestyle="--", label="Rap")
+        graficoFinal[2].plot(0, 1, color=color_pop, linestyle="--", label="Pop")
+        graficoFinal[2].plot(0, 1, color=color_blues, linestyle="--", label="Blues")
+        fig.legend(bbox_to_anchor=(0.1, 0.86))
+
+        #Agregar numeracion en eje x par a los ultimos graficos
+        for i in range(0, 3, 1):
+            regla15_graficos[i].xaxis.set_tick_params(which='both', labelbottom=True)
+
+        #Ocultar los graficos en blanco
+        for g in graficoFinal:
+            g.axis("off")
+
+        graficoFinal[3].axis("on") #Mostrar el grafico final
+        graficoFinal[3].fill_between(escala_genero, agregacionFinal, facecolor="g", alpha=0.6)
+        graficoFinal[3].plot([desfuzzificacion, desfuzzificacion], [0, resultado], "k", linewidth=1.2)
         graficoFinal[3].plot([0], [1], linewidth=0)
-        
+    
         # Se muestran los graficos
-        plt.tight_layout()
         messagebox.showinfo("Gráficos Generados", "Gráficos generados con éxito. Recuerde cerrar la ventana de gráficos para ver más gráficos y resultados.")
         plt.show() 
 
@@ -660,7 +698,7 @@ entry1.pack(padx=20, pady=10) # Se configura el cuadro
 entry1.place(relx=0.70,rely=0.18, relwidth = 0.1, relheight= 0.05) # Se posiciona el cuadro
 
 # Se crea un texto para informar al usuario que ingresar
-text_var1 = tk.StringVar(value="En escala del 1 al 10, ¿De cuantos integrantes prefiere que sea un artista?")
+text_var1 = tk.StringVar(value="En escala del 1 al 9, ¿De cuantos integrantes prefiere que sea un artista?")
 label1 = ctk.CTkLabel(master=app, textvariable=text_var1,
                                width=100,
                                height=25,
@@ -673,7 +711,7 @@ entry2.pack(padx=20, pady=10) # Se configura el cuadro
 entry2.place(relx=0.70,rely=0.43, relwidth = 0.1, relheight= 0.05) # Se posiciona el cuadro
 
 # Se crea otro texto para informar al usuario que puede usar decimales
-text_var2 = tk.StringVar(value="Para las siguientes consultas puede considerar numeros decimales (Ej: 10.5)")
+text_var2 = tk.StringVar(value="Para las siguientes consultas puede considerar numeros decimales (Ej: 8.5)")
 label2 = ctk.CTkLabel(master=app, textvariable=text_var2,
                                width=100,
                                height=25,
@@ -682,7 +720,7 @@ label2 = ctk.CTkLabel(master=app, textvariable=text_var2,
 label2.place(relx=0.60,rely=0.25) # Se posiciona el texto
 
 # Se crea otro texto para informar al usuario que debe ingresar
-text_var3 = tk.StringVar(value="En escala del 0 al 10, ¿que tanto prefiere que una cancion tenga una intensidad de sonido?")
+text_var3 = tk.StringVar(value="En escala del 0 al 9, ¿que tanto prefiere que una cancion tenga una intensidad de sonido?")
 label3 = ctk.CTkLabel(master=app, textvariable=text_var3,
                                width=100,
                                height=25,
@@ -695,7 +733,7 @@ entry3.pack(padx=20, pady=10) # Se configura el cuadro
 entry3.place(relx=0.70,rely=0.60, relwidth = 0.1, relheight= 0.05) # Se posiciona el cuadro
 
 # Se crea otro texto para informar al usuario que debe ingresar
-text_var4 = tk.StringVar(value="En escala del 0 al 10, ¿Que tanto prefiere que una cancion tenga ritmo?")
+text_var4 = tk.StringVar(value="En escala del 0 al 9, ¿Que tanto prefiere que una cancion tenga ritmo?")
 label4 = ctk.CTkLabel(master=app, textvariable=text_var4,
                                width=100,
                                height=25,
