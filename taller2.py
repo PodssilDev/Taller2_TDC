@@ -381,18 +381,22 @@ def main_interfaz():
         listbox.insert(tk.END, "El genero preferido es: Rock")
         listbox.insert(tk.END, "") # Se agrega una linea al listbox
         lista_canciones = canciones_rock  # Se asignan las canciones de Rock
+        color_grafico_final = "mediumblue"
     elif resultado == pop:
         listbox.insert(tk.END, "El genero preferido es: Pop")
         listbox.insert(tk.END, "") # Se agrega una linea al listbox
         lista_canciones = canciones_pop # Se asignan las canciones de Pop
+        color_grafico_final = "mediumvioletred"
     elif resultado == rap:
         listbox.insert(tk.END, "El genero preferido es: Rap")
         listbox.insert(tk.END, "") # Se agrega una linea al listbox
         lista_canciones = canciones_rap # Se asignan las canciones de Rap
+        color_grafico_final = "forestgreen"
     elif resultado == blues:
         listbox.insert(tk.END, "El genero preferido es: Blues\n")
         listbox.insert(tk.END, "") # Se agrega una linea al listbox
         lista_canciones = canciones_blues # Se asignan las canciones de Blues
+        color_grafico_final = "chocolate"
     
     # Se obtiene la lista de canciones, filtrando por caracteristicas.
     # En la funcion obtenerCanciones se seleccionan las canciones que cumplan con las caracteristicas
@@ -594,7 +598,7 @@ def main_interfaz():
             g.axis("off")
 
         graficoFinal[3].axis("on") #Mostrar el grafico final
-        graficoFinal[3].fill_between(escala_genero, agregacionFinal, facecolor="g", alpha=0.6)
+        graficoFinal[3].fill_between(escala_genero, agregacionFinal, facecolor=color_grafico_final, alpha=0.7)
         graficoFinal[3].plot([desfuzzificacion, desfuzzificacion], [0, resultado], "k", linewidth=1.2)
         graficoFinal[3].plot([0], [1], linewidth=0)
     
