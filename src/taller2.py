@@ -38,7 +38,7 @@ def obtenerCanciones(lista_canciones, caracteristica1, caracteristica2, caracter
                     lista_canciones_final.append(lista_canciones[i][0])
         i = i + 1
     if(len(lista_canciones_final) != 0): # Si se encontraron opciones
-        listbox.insert(tk.END, "Canciones recomendadas del genero basado en sus preferencias: ")
+        listbox.insert(tk.END, "Canciones recomendadas del género basado en sus preferencias: ")
         for cancion in lista_canciones_final:
             listbox.insert(tk.END, cancion) # Se muestran las canciones recomendadas
         listbox.insert(tk.END, "")
@@ -53,7 +53,7 @@ def obtenerCanciones(lista_canciones, caracteristica1, caracteristica2, caracter
                 lista_canciones_final.append(lista_canciones[i][0])
             i = i + 1
         if(len(lista_canciones_final) != 0): # Si se encontraron canciones
-            listbox.insert(tk.END, "Canciones recomendadas del genero basado en sus preferencias: ")
+            listbox.insert(tk.END, "Canciones recomendadas del género basado en sus preferencias: ")
             for cancion in lista_canciones_final:
                 listbox.insert(tk.END, cancion) # Se muestran las canciones recomendadas
             listbox.insert(tk.END, "")
@@ -377,22 +377,22 @@ def main_interfaz():
 
     listbox.insert(tk.END, "Resultados: ") # Se inserta un texto para escribir los resultados en la listbox
     if resultado == rock:
-        listbox.insert(tk.END, "El genero preferido es: Rock")
+        listbox.insert(tk.END, "El género preferido es: Rock")
         listbox.insert(tk.END, "") # Se agrega una linea al listbox
         lista_canciones = canciones_rock  # Se asignan las canciones de Rock
         color_grafico_final = "mediumblue"
     elif resultado == pop:
-        listbox.insert(tk.END, "El genero preferido es: Pop")
+        listbox.insert(tk.END, "El género preferido es: Pop")
         listbox.insert(tk.END, "") # Se agrega una linea al listbox
         lista_canciones = canciones_pop # Se asignan las canciones de Pop
         color_grafico_final = "mediumvioletred"
     elif resultado == rap:
-        listbox.insert(tk.END, "El genero preferido es: Rap")
+        listbox.insert(tk.END, "El género preferido es: Rap")
         listbox.insert(tk.END, "") # Se agrega una linea al listbox
         lista_canciones = canciones_rap # Se asignan las canciones de Rap
         color_grafico_final = "forestgreen"
     elif resultado == blues:
-        listbox.insert(tk.END, "El genero preferido es: Blues\n")
+        listbox.insert(tk.END, "El género preferido es: Blues\n")
         listbox.insert(tk.END, "") # Se agrega una linea al listbox
         lista_canciones = canciones_blues # Se asignan las canciones de Blues
         color_grafico_final = "chocolate"
@@ -713,7 +713,7 @@ entry2.pack(padx=20, pady=10) # Se configura el cuadro
 entry2.place(relx=0.70,rely=0.43, relwidth = 0.1, relheight= 0.05) # Se posiciona el cuadro
 
 # Se crea otro texto para informar al usuario que puede usar decimales
-text_var2 = tk.StringVar(value="Para las siguientes consultas puede considerar numeros decimales (Ej: 8.5)")
+text_var2 = tk.StringVar(value="Para las siguientes consultas puede considerar números decimales (Ej: 8.5)")
 label2 = ctk.CTkLabel(master=app, textvariable=text_var2,
                                width=100,
                                height=25,
@@ -722,7 +722,7 @@ label2 = ctk.CTkLabel(master=app, textvariable=text_var2,
 label2.place(relx=0.60,rely=0.25) # Se posiciona el texto
 
 # Se crea otro texto para informar al usuario que debe ingresar
-text_var3 = tk.StringVar(value="En escala del 0 al 9, ¿que tanto prefiere que una cancion tenga una intensidad de sonido?")
+text_var3 = tk.StringVar(value="En escala del 0 al 9, ¿que tanto prefiere que una canción tenga una intensidad de sonido?")
 label3 = ctk.CTkLabel(master=app, textvariable=text_var3,
                                width=100,
                                height=25,
@@ -735,7 +735,7 @@ entry3.pack(padx=20, pady=10) # Se configura el cuadro
 entry3.place(relx=0.70,rely=0.60, relwidth = 0.1, relheight= 0.05) # Se posiciona el cuadro
 
 # Se crea otro texto para informar al usuario que debe ingresar
-text_var4 = tk.StringVar(value="En escala del 0 al 9, ¿Que tanto prefiere que una cancion tenga ritmo?")
+text_var4 = tk.StringVar(value="En escala del 0 al 9, ¿Que tanto prefiere que una canción tenga ritmo?")
 label4 = ctk.CTkLabel(master=app, textvariable=text_var4,
                                width=100,
                                height=25,
@@ -752,7 +752,7 @@ combobox = ctk.CTkComboBox(master=app,
 combobox.place(relx=0.70,rely=0.75, relwidth = 0.1, relheight= 0.05) # Se configura la caja de opciones
 
 # Se crea un texto para realizar la pregunta al usuario si desea generar los graficos
-text_var5 = tk.StringVar(value="¿Quiere generar todos los graficos de los resultados?")
+text_var5 = tk.StringVar(value="¿Quiere generar todos los gráficos de los resultados?")
 label5 = ctk.CTkLabel(master=app, textvariable=text_var5,
                                width=100,
                                height=25,
