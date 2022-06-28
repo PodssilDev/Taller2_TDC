@@ -1,10 +1,10 @@
 Taller 2 - Grupo 3
 Autores: 
-* Mastias Figueroa
+* Matías Figueroa
 * Daniel Frez 
 * Javier Sanhueza
 * John Serrano
-Teoria de la Computacion 2022-1
+Teoría de la Computación 2022-1
 
 Instrucciones de Uso:
 1. Este programa funciona con cualquier versión de Python 3. Sin embargo, para poder ejecutarlo, se 
